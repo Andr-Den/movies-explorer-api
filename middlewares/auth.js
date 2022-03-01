@@ -14,8 +14,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret');
   } catch (error) {
-    // throw new NoAuthError('Необходима авторизация');
-    console.log(process.env.JWT_SECRET);
+    throw new NoAuthError('Необходима авторизация');
   }
 
   req.user = payload;
