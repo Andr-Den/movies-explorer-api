@@ -48,14 +48,14 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  Movie.findById(req.params._id)
     .orFail(new Error('Not Found'))
-    .then((card) => {
-      if (card.owner.toString() !== req.user._id.toString()) {
+    .then((movie) => {
+      if (movie.owner.toString() !== req.user._id.toString()) {
         throw new Error('No rights');
       }
 
-      return card.remove();
+      return movie.remove();
     })
     .then(() => res.send({ message: 'Фильм успешно удален' }))
     .catch((error) => {
