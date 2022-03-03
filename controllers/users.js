@@ -61,7 +61,7 @@ module.exports.updateUser = (req, res, next) => {
     .orFail(new Error('Not Found'))
     .then((user) => res.send({ data: user }))
     .catch((error) => {
-      if (error.name === 'ValidationError') { next(new NotCorrectError('Некорректные данные')); } else if (error.message === 'Not Found') { next(new NotFoundError('Запрашиваемый пользователь не найден')); } else {
+      if (error.name === 'ValidationError') { next(new NotCorrectError('Некорректные данные')); } else if (error.name === 'MongoServerError' && error.code === 11000) { next(new ExistEmailError('Пользователь с таким email уже существует')); } else if (error.message === 'Not Found') { next(new NotFoundError('Запрашиваемый пользователь не найден')); } else {
         next(error);
       }
     });
