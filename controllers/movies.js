@@ -41,7 +41,9 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => res.send({ data: movie }))
     .catch((error) => {
-      if (error.name === 'ValidationError') { next(new NotCorrectError('Некорректные данные')); } else {
+      if (error.name === 'ValidationError') {
+        next(new NotCorrectError('Некорректные данные'));
+      } else {
         next(error);
       }
     });
@@ -49,17 +51,19 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
-    .orFail(new Error('Not Found'))
+    .orFail(new NotFoundError('Запрашиваемый фильм не найден'))
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id.toString()) {
-        throw new Error('No rights');
+        throw new NoRightsError('Нет прав на удаление фильма');
       }
 
       return movie.remove();
     })
     .then(() => res.send({ message: 'Фильм успешно удален' }))
     .catch((error) => {
-      if (error.name === 'CastError') { next(new NotCorrectError('Некорректный id')); } else if (error.message === 'Not Found') { next(new NotFoundError('Запрашиваемый фильм не найден')); } else if (error.message === 'No rights') { next(new NoRightsError('Нет прав на удаление фильма')); } else {
+      if (error.name === 'CastError') {
+        next(new NotCorrectError('Некорректный id'));
+      } else {
         next(error);
       }
     });

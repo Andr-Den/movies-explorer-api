@@ -5,7 +5,6 @@ const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-error');
 const NotCorrectError = require('../errors/not-correct-error');
-const NoAuthError = require('../errors/no-auth-error');
 const ExistEmailError = require('../errors/exist-email-error');
 
 module.exports.login = (req, res, next) => {
@@ -17,11 +16,7 @@ module.exports.login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch((error) => {
-      if (error.name === 'Неправильные почта или пароль') { next(new NoAuthError('Неправильные почта или пароль')); } else {
-        next(error);
-      }
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -39,7 +34,11 @@ module.exports.createUser = (req, res, next) => {
       },
     }))
     .catch((error) => {
-      if (error.name === 'ValidationError') { next(new NotCorrectError('Некорректные данные')); } else if (error.name === 'MongoServerError' && error.code === 11000) { next(new ExistEmailError('Пользователь с таким email уже существует')); } else {
+      if (error.name === 'ValidationError') {
+        next(new NotCorrectError('Некорректные данные'));
+      } else if (error.name === 'MongoServerError' && error.code === 11000) {
+        next(new ExistEmailError('Пользователь с таким email уже существует'));
+      } else {
         next(error);
       }
     });
@@ -50,7 +49,9 @@ module.exports.getCurrentUser = (req, res, next) => {
     .orFail(new Error('Not Found'))
     .then((user) => res.send({ data: user }))
     .catch((error) => {
-      if (error.message === 'Not Found') { next(new NotFoundError('Запрашиваемый пользователь не найден')); } else {
+      if (error.message === 'Not Found') {
+        next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      } else {
         next(error);
       }
     });
@@ -61,7 +62,13 @@ module.exports.updateUser = (req, res, next) => {
     .orFail(new Error('Not Found'))
     .then((user) => res.send({ data: user }))
     .catch((error) => {
-      if (error.name === 'ValidationError') { next(new NotCorrectError('Некорректные данные')); } else if (error.name === 'MongoServerError' && error.code === 11000) { next(new ExistEmailError('Пользователь с таким email уже существует')); } else if (error.message === 'Not Found') { next(new NotFoundError('Запрашиваемый пользователь не найден')); } else {
+      if (error.name === 'ValidationError') {
+        next(new NotCorrectError('Некорректные данные'));
+      } else if (error.name === 'MongoServerError' && error.code === 11000) {
+        next(new ExistEmailError('Пользователь с таким email уже существует'));
+      } else if (error.message === 'Not Found') {
+        next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      } else {
         next(error);
       }
     });
