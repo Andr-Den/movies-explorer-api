@@ -18,7 +18,7 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
     })
     .catch((error) => {
-      if (error.name === 'Неправильные почта, имя или пароль') { next(new NoAuthError('Неправильные почта, имя или пароль')); } else {
+      if (error.name === 'Неправильные почта или пароль') { next(new NoAuthError('Неправильные почта или пароль')); } else {
         next(error);
       }
     });
@@ -26,16 +26,16 @@ module.exports.login = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email,
+    name, email,
   } = req.body;
 
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, email, password: hash,
     }))
     .then((user) => res.send({
       data: {
-        name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+        name: user.name, email: user.email,
       },
     }))
     .catch((error) => {
