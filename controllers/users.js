@@ -9,9 +9,9 @@ const NoAuthError = require('../errors/no-auth-error');
 const ExistEmailError = require('../errors/exist-email-error');
 
 module.exports.login = (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password, name)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 
