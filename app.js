@@ -16,7 +16,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DB_URL : 'mongodb://localhost:27017/bitfilmsdb');
 
 app.use(requestLogger);
 

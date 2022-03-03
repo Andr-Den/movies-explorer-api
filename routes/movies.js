@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const {
   getMovies, createMovie, deleteMovie,
 } = require('../controllers/movies');
@@ -12,9 +13,21 @@ router.post('/movies', celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().regex(/^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/),
-    trailerLink: Joi.string().required().regex(/^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/),
-    thumbnail: Joi.string().required().regex(/^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/),
+    image: Joi.string().required().custom((value) => {
+      if (!validator.isURL(value)) {
+        throw new Error('Некорректная ссылка');
+      }
+    }),
+    trailerLink: Joi.string().required().custom((value) => {
+      if (!validator.isURL(value)) {
+        throw new Error('Некорректная ссылка');
+      }
+    }),
+    thumbnail: Joi.string().required().custom((value) => {
+      if (!validator.isURL(value)) {
+        throw new Error('Некорректная ссылка');
+      }
+    }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),

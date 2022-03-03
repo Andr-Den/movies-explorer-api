@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -24,28 +25,31 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     validate: {
-      validator(v) {
-        return /^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/.test(v);
+      validator(value) {
+        if (!validator.isURL(value)) {
+          throw new Error('Некорректная ссылка');
+        }
       },
-      message: (props) => `${props.value} is not a valid link!`,
     },
   },
   trailerLink: {
     type: String,
     validate: {
-      validator(v) {
-        return /^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/.test(v);
+      validator(value) {
+        if (!validator.isURL(value)) {
+          throw new Error('Некорректная ссылка');
+        }
       },
-      message: (props) => `${props.value} is not a valid link!`,
     },
   },
   thumbnail: {
     type: String,
     validate: {
-      validator(v) {
-        return /^((https|http):\/\/)(www\.)?([A-Za-z0-9]{1}[A-Za-z0-9-]*\.?)*\.{1}[A-Za-z0-9-]{2,}(\/([\w#!:.?+=&%@!\-/])*)?/.test(v);
+      validator(value) {
+        if (!validator.isURL(value)) {
+          throw new Error('Некорректная ссылка');
+        }
       },
-      message: (props) => `${props.value} is not a valid link!`,
     },
   },
   owner: {
