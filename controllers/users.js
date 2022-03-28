@@ -28,11 +28,12 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, email, password: hash,
     }))
-    .then((user) => res.send({
-      data: {
-        name: user.name, email: user.email,
-      },
-    }))
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      res.send({
+        name, email, token,
+      });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new NotCorrectError('Некорректные данные'));

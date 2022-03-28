@@ -13,24 +13,14 @@ router.post('/movies', celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().custom((value) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      throw new Error('Некорректная ссылка');
-    }),
+    image: Joi.string().required(),
     trailerLink: Joi.string().required().custom((value) => {
       if (validator.isURL(value)) {
         return value;
       }
       throw new Error('Некорректная ссылка');
     }),
-    thumbnail: Joi.string().required().custom((value) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      throw new Error('Некорректная ссылка');
-    }),
+    thumbnail: Joi.string().required(),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),

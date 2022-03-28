@@ -5,6 +5,7 @@ const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-error');
+const cors = require('./middlewares/cors');
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
@@ -19,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DB_URL : 'mongodb://localhost:27017/bitfilmsdb');
 
 app.use(requestLogger);
+
+app.use(cors);
 
 app.use(require('./routes/sign'));
 

@@ -24,13 +24,6 @@ const movieSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    validate: {
-      validator(value) {
-        if (!validator.isURL(value)) {
-          throw new Error('Некорректная ссылка');
-        }
-      },
-    },
   },
   trailerLink: {
     type: String,
@@ -44,13 +37,6 @@ const movieSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    validate: {
-      validator(value) {
-        if (!validator.isURL(value)) {
-          throw new Error('Некорректная ссылка');
-        }
-      },
-    },
   },
   owner: {
     type: String,
